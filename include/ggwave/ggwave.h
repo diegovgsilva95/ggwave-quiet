@@ -138,6 +138,7 @@ extern "C" {
         ggwave_SampleFormat sampleFormatInp;      // format of the captured audio samples
         ggwave_SampleFormat sampleFormatOut;      // format of the playback audio samples
         int                 operatingMode;        // operating mode
+        bool                quietStdout;          // enable/disable stdout logging
     } ggwave_Parameters;
 
     // GGWave instances are identified with an integer and are stored
@@ -920,6 +921,7 @@ private:
     bool         m_needResampling       = false;
     bool         m_txOnlyTones          = false;
     bool         m_isDSSEnabled         = false;
+    bool         m_quietStdout          = false;
 
     // Common
     TxRxData m_dataEncoded;

@@ -43,7 +43,7 @@ endif()
 
 # third-party
 
-add_subdirectory(third-party)
+# add_subdirectory(third-party)
 
 # helper libraries
 
@@ -74,7 +74,7 @@ if (GGWAVE_SUPPORT_SDL2)
 
     target_link_libraries(ggwave-common-sdl2 PRIVATE
         ggwave
-        imgui-sdl2
+        # imgui-sdl2
         ${SDL2_LIBRARIES}
         )
 endif()
@@ -82,38 +82,39 @@ endif()
 # examples
 
 if (EMSCRIPTEN)
-    add_subdirectory(ggwave-js)
-    add_subdirectory(buttons)
+    # add_subdirectory(ggwave-js)
+    # add_subdirectory(buttons)
 else()
-    add_subdirectory(ggwave-to-file)
-    add_subdirectory(ggwave-from-file)
+    # add_subdirectory(ggwave-to-file)
+    # add_subdirectory(ggwave-from-file)
 
-    add_subdirectory(arduino-rx)
-    add_subdirectory(arduino-tx)
-    add_subdirectory(arduino-tx-obsolete)
-    add_subdirectory(esp32-rx)
-    add_subdirectory(rp2040-rx)
+    # add_subdirectory(arduino-rx)
+    # add_subdirectory(arduino-tx)
+    # add_subdirectory(arduino-tx-obsolete)
+    # add_subdirectory(esp32-rx)
+    # add_subdirectory(rp2040-rx)
 endif()
 
 if (GGWAVE_SUPPORT_SDL2)
     if (UNIX AND NOT APPLE)
-        add_subdirectory(r2t2)
+        # add_subdirectory(r2t2)
     endif()
 
-    add_subdirectory(arduino-rx-web)
+    # add_subdirectory(arduino-rx-web)
     if (EMSCRIPTEN)
         # emscripten sdl2 examples
 
-        add_subdirectory(ggwave-wasm)
+        # add_subdirectory(ggwave-wasm)
     else()
         # non-emscripten sdl2 examples
 
-        add_subdirectory(ggwave-rx)
+        # add_subdirectory(ggwave-rx)
         add_subdirectory(ggwave-cli)
+        add_subdirectory(ggwave-quiet)
     endif()
 
-    add_subdirectory(waver)
-    add_subdirectory(spectrogram)
+    # add_subdirectory(waver)
+    # add_subdirectory(spectrogram)
 endif()
 
 install(TARGETS ggwave-common

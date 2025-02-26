@@ -67,7 +67,9 @@ ggwave_Instance ggwave_init(ggwave_Parameters parameters) {
                 parameters.soundMarkerThreshold,
                 parameters.sampleFormatInp,
                 parameters.sampleFormatOut,
-                parameters.operatingMode});
+                parameters.operatingMode,
+                parameters.quietStdout
+                });
 
             return id;
         }
@@ -500,7 +502,7 @@ bool GGWave::prepare(const Parameters & parameters, bool allocate) {
     m_needResampling       = m_sampleRateInp != m_sampleRate || m_sampleRateOut != m_sampleRate;
     m_txOnlyTones          = parameters.operatingMode & GGWAVE_OPERATING_MODE_TX_ONLY_TONES;
     m_isDSSEnabled         = parameters.operatingMode & GGWAVE_OPERATING_MODE_USE_DSS;
-
+    m_quietStdout          = parameters.quietStdout;
     if (m_sampleSizeInp == 0) {
         ggprintf("Invalid or unsupported capture sample format: %d\n", (int) parameters.sampleFormatInp);
         return false;
@@ -671,6 +673,7 @@ const GGWave::Parameters & GGWave::getDefaultParameters() {
         GGWAVE_SAMPLE_FORMAT_F32,
         GGWAVE_SAMPLE_FORMAT_F32,
         GGWAVE_OPERATING_MODE_RX | GGWAVE_OPERATING_MODE_TX,
+        false
     };
 
     return result;
@@ -1610,7 +1613,9 @@ void GGWave::decode_variable() {
     }
 
     if (m_rx.analyzing) {
-        ggprintf("Analyzing captured data ..\n");
+        if (!m_quietStdout){
+            ggprintf("Analyzing captured data ..\n");
+        }
 
         const int stepsPerFrame = 16;
         const int step = m_samplesPerFrame/stepsPerFrame;
@@ -1730,9 +1735,13 @@ void GGWave::decode_variable() {
                                     m_rx.data[i] = m_rx.data[i] ^ getDSSMagic(i);
                                 }
                             }
-
-                            ggprintf("Decoded length = %d, protocol = '%s' (%d)\n", decodedLength, protocol.name, protocolId);
-                            ggprintf("Received sound data successfully: '%s'\n", m_rx.data.data());
+                            if (!m_quietStdout){
+                                ggprintf("Decoded length = %d, protocol = '%s' (%d)\n", decodedLength, protocol.name, protocolId);
+                                ggprintf("Received sound data successfully: '%s'\n", m_rx.data.data());
+                            }
+                            else {
+                                ggprintf("%s\n", m_rx.data.data());
+                            }
 
                             isValid = true;
                             m_rx.hasNewRxData = true;
@@ -1809,7 +1818,9 @@ void GGWave::decode_variable() {
         }
 
         if (isReceiving) {
-            ggprintf("Receiving sound data ...\n");
+            if (!m_quietStdout){
+                ggprintf("Receiving sound data ...\n");
+            }
 
             m_rx.receiving = true;
             m_rx.data.zero();
@@ -1864,7 +1875,9 @@ void GGWave::decode_variable() {
 
         if (isEnded && m_rx.framesToRecord > 1) {
             m_rx.recvDuration_frames -= m_rx.framesLeftToRecord - 1;
-            ggprintf("Received end marker. Frames left = %d, recorded = %d\n", m_rx.framesLeftToRecord, m_rx.recvDuration_frames);
+            if (!m_quietStdout){
+                ggprintf("Received end marker. Frames left = %d, recorded = %d\n", m_rx.framesLeftToRecord, m_rx.recvDuration_frames);
+            }
             m_rx.nMarkersSuccess = 0;
             m_rx.framesLeftToRecord = 1;
         }
@@ -2027,9 +2040,12 @@ void GGWave::decode_fixed() {
                     }
                 }
 
-                ggprintf("Decoded length = %d, protocol = '%s' (%d)\n", m_payloadLength, protocol.name, protocolId);
-                ggprintf("Received sound data successfully: '%s'\n", m_rx.data.data());
-
+                if (!m_quietStdout){
+                    ggprintf("Decoded length = %d, protocol = '%s' (%d)\n", m_payloadLength, protocol.name, protocolId);
+                    ggprintf("Received sound data successfully: '%s'\n", m_rx.data.data());
+                } else {
+                    ggprintf("%s\n", m_rx.data.data());
+                }
                 isValid = true;
                 m_rx.hasNewRxData = true;
                 m_rx.dataLength = m_payloadLength;

@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.0)
 project(ggwave VERSION 0.4.2)
 
-set(GGWAVE_VERSION_PYTHON 0.4.2)
+# set(GGWAVE_VERSION_PYTHON 0.4.2)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "on")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -13,10 +13,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(cmake/BuildTypes.cmake)
 
     # configure project version
-    configure_file(${CMAKE_SOURCE_DIR}/README-tmpl.md                        ${CMAKE_SOURCE_DIR}/README.md @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/bindings/python/setup-tmpl.py         ${CMAKE_SOURCE_DIR}/bindings/python/setup.py @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/bindings/javascript/package-tmpl.json ${CMAKE_SOURCE_DIR}/bindings/javascript/package.json @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/bindings/ios/Makefile-tmpl            ${CMAKE_SOURCE_DIR}/bindings/ios/Makefile @ONLY)
+    # configure_file(${CMAKE_SOURCE_DIR}/README-tmpl.md                        ${CMAKE_SOURCE_DIR}/README.md @ONLY)
+    # configure_file(${CMAKE_SOURCE_DIR}/bindings/python/setup-tmpl.py         ${CMAKE_SOURCE_DIR}/bindings/python/setup.py @ONLY)
+    # configure_file(${CMAKE_SOURCE_DIR}/bindings/javascript/package-tmpl.json ${CMAKE_SOURCE_DIR}/bindings/javascript/package.json @ONLY)
+    # configure_file(${CMAKE_SOURCE_DIR}/bindings/ios/Makefile-tmpl            ${CMAKE_SOURCE_DIR}/bindings/ios/Makefile @ONLY)
 else()
     set(GGWAVE_STANDALONE OFF)
 endif()
@@ -88,12 +88,7 @@ if (GGWAVE_ALL_WARNINGS)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(bindings)
-
-if (GGWAVE_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
+# add_subdirectory(bindings)
 
 if (GGWAVE_BUILD_EXAMPLES)
     add_subdirectory(examples)
